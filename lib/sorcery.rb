@@ -1,7 +1,8 @@
 
 module Sorcery
   class Results
-    def initialize 
+    def initialize options = {}
+      @options = options
       @heats = []
       @results = Hash.new 0
     end
@@ -19,7 +20,11 @@ module Sorcery
     end
 
     def to_a
-      @results.to_a.sort {|x,y| y[1] <=> x[1]} 
+      if @options[:condition] == :min
+        @results.to_a.sort {|x,y| x[1] <=> y[1]} 
+      else
+        @results.to_a.sort {|x,y| y[1] <=> x[1]} 
+      end
     end
 
     def sorted_ids
@@ -31,8 +36,8 @@ module Sorcery
     end
   end
 
-  def self.score heats
-    results = Results.new
+  def self.score heats, options = {}
+    results = Results.new options
     heats.each { |h| results.add_heat h }
     results
   end
