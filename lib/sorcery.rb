@@ -3,15 +3,16 @@ module Sorcery
   class Results
     def initialize options = {}
       @options = options
-      @heats = []
       @results = Hash.new 0
     end
 
     def add_heat heat
-      @heats << heat.results
-
-      heat.results.each do |one_result|
-        @results[one_result.id] += one_result.score
+      heat.each do |one_result|
+        if one_result.respond_to? :score
+          @results[one_result.id] += one_result.score
+        elsif one_result.is_a? Array
+          @results[one_result[0]] += one_result[1]
+        end
       end
     end
 
