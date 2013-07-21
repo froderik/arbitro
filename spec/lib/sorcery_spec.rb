@@ -22,6 +22,7 @@ describe Sorcery do
     subject { Sorcery.score [heat1, heat2, heat3] }
 
     its(:sorted_ids) {should == [1,2,0]}
+    its(:winner) {should == 1}
     it { subject[0].should == 9 }
     it { subject[1].should == 18 }
     it { subject[2].should == 17 }

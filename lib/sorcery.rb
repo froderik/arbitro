@@ -25,6 +25,10 @@ module Sorcery
     def sorted_ids
       to_a.map { |result| result[0] }
     end
+
+    def winner
+      to_a.first[0]
+    end
   end
 
   def self.score heats
