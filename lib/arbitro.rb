@@ -1,5 +1,5 @@
 
-module Sorcery
+module Arbitro
   class Results
     def initialize options = {}
       @options = options

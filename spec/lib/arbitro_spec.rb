@@ -1,6 +1,6 @@
-require 'sorcery'
+require 'arbitro'
 
-describe Sorcery do
+describe Arbitro do
 
   Result = Struct.new :id, :score
   Heat = Struct.new :results
@@ -28,7 +28,7 @@ describe Sorcery do
       let(:heats) { [heat1, heat2, heat3] }
 
       context 'standard case - ' do
-        subject { Sorcery.score heats }
+        subject { Arbitro.score heats }
 
         its(:sorted_ids) { should == [1,2,0] }
         its(:winner)     { should == 1 }
@@ -38,7 +38,7 @@ describe Sorcery do
       end
 
       context 'lower wins - ' do
-        subject { Sorcery.score heats, condition: :min}
+        subject { Arbitro.score heats, condition: :min}
 
         its(:sorted_ids) { should == [0,2,1] }
         its(:winner)     { should == 0 }
