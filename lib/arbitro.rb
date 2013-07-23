@@ -7,11 +7,17 @@ module Arbitro
     end
 
     def add_heat heat
-      heat.each do |one_result|
-        if one_result.respond_to? :score
-          @results[one_result.id] += one_result.score
-        elsif one_result.is_a? Array
-          @results[one_result[0]] += one_result[1]
+      if heat.is_a? Array
+        heat.each do |one_result|
+          if one_result.respond_to? :score
+            @results[one_result.id] += one_result.score
+          elsif one_result.is_a? Array
+            @results[one_result[0]] += one_result[1]
+          end
+        end
+      elsif heat.is_a? Hash
+        heat.each do |id, score|
+          @results[id] += score
         end
       end
     end
