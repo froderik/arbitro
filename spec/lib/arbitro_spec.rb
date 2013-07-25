@@ -1,7 +1,6 @@
 require 'arbitro'
 
 describe Arbitro do
-
   Result = Struct.new :id, :score
   Heat = Struct.new :results
 
@@ -43,6 +42,15 @@ describe Arbitro do
 
         its(:sorted_ids) { should == [0,2,1] }
         its(:winner)     { should == 0 }
+      end
+    end
+  end
+
+  context ' - error handling - ' do
+    it 'should raise when a bad type is passed in' do
+      bad_scoring = lambda { Arbitro.score( 7 ) }
+      bad_scoring.should raise_exception( Arbitro::NotSupported ) do |e| 
+        e.message.should =~ /#{7.class.name}/ 
       end
     end
   end

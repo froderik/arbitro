@@ -1,5 +1,8 @@
 
 module Arbitro
+  class NotSupported < Exception
+  end
+
   class Results
     def initialize options = {}
       @options = options
@@ -44,8 +47,13 @@ module Arbitro
   end
 
   def self.score heats, options = {}
+    raise( NotSupported, each_not_supported( heats ) ) unless heats.respond_to? :each
     results = Results.new options
     heats.each { |h| results.add_heat h }
     results
+  end
+
+  def self.each_not_supported heats
+    "Only things that listens to :each allowed as first argument - you tried with a #{heats.class.name}"
   end
 end
