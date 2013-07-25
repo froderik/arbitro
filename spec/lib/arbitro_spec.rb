@@ -53,6 +53,20 @@ describe Arbitro do
         e.message.should =~ /#{7.class.name}/ 
       end
     end
+
+    it 'should raise when a heat array lacks something answering to score' do
+      bad_scoring = lambda { Arbitro.score( [[7,1,2,3],[1,2,3,4]] ) }
+      bad_scoring.should raise_exception( Arbitro::NotSupported ) do |e| 
+        e.message.should =~ /#{7.class.name}/ 
+      end
+    end
+
+    it 'should raise when a heat is not an array or a hash' do
+      bad_scoring = lambda { Arbitro.score( [7,1,2,3] ) }
+      bad_scoring.should raise_exception( Arbitro::NotSupported ) do |e| 
+        e.message.should =~ /#{7.class.name}/ 
+      end
+    end
   end
 
 end

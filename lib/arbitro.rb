@@ -16,12 +16,16 @@ module Arbitro
             @results[one_result.id] += one_result.score
           elsif one_result.is_a? Array
             @results[one_result[0]] += one_result[1]
+          else
+            raise NotSupported, "I expected something receiving :score or an array but got a #{one_result.class.name}"
           end
         end
       elsif heat.is_a? Hash
         heat.each do |id, score|
           @results[id] += score
         end
+      else
+        raise NotSupported, "A heat must be an Array or a Hash - found a #{heat.class.name}"
       end
     end
 
@@ -52,6 +56,8 @@ module Arbitro
     heats.each { |h| results.add_heat h }
     results
   end
+
+  private
 
   def self.each_not_supported heats
     "Only things that listens to :each allowed as first argument - you tried with a #{heats.class.name}"
