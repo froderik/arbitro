@@ -11,22 +11,26 @@ module Arbitro
 
     def add_heat heat
       if heat.is_a? Array
-        heat.each do |one_result|
-          if one_result.respond_to? :score
-            @results[one_result.id] += one_result.score
-          elsif one_result.is_a? Array
-            @results[one_result[0]] += one_result[1]
-          else
-            raise NotSupported, "I expected something receiving :score or an array but got a #{one_result.class.name}"
-          end
-        end
+        heat.each { |one_result| add_one_result_from_array one_result }
       elsif heat.is_a? Hash
-        heat.each do |id, score|
-          @results[id] += score
-        end
+        heat.each { |id, score| add_score id, score }
       else
         raise NotSupported, "A heat must be an Array or a Hash - found a #{heat.class.name}"
       end
+    end
+
+    def add_one_result_from_array one_result
+      if one_result.respond_to? :score
+        add_score one_result.id, one_result.score
+      elsif one_result.is_a? Array
+        add_score one_result[0], one_result[1]
+      else
+        raise NotSupported, "I expected something receiving :score or an array but got a #{one_result.class.name}"
+      end
+    end
+
+    def add_score id, score
+      @results[id] += score
     end
 
     def [] id
@@ -34,11 +38,8 @@ module Arbitro
     end
 
     def to_a
-      if @options[:condition] == :min
-        @results.to_a.sort {|x,y| x[1] <=> y[1]} 
-      else
-        @results.to_a.sort {|x,y| y[1] <=> x[1]} 
-      end
+      lower_score_wins = @options[:condition] == :min
+      @results.to_a.sort { |x,y| lower_score_wins ? x[1] <=> y[1] : y[1] <=> x[1] } 
     end
 
     def sorted_ids
