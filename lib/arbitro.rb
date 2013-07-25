@@ -51,15 +51,11 @@ module Arbitro
   end
 
   def self.score heats, options = {}
-    raise( NotSupported, each_not_supported( heats ) ) unless heats.respond_to? :each
+    unless heats.respond_to? :each
+      raise NotSupported, "Only things that listens to :each allowed as first argument - you tried with a #{heats.class.name}"
+    end
     results = Results.new options
     heats.each { |h| results.add_heat h }
     results
-  end
-
-  private
-
-  def self.each_not_supported heats
-    "Only things that listens to :each allowed as first argument - you tried with a #{heats.class.name}"
   end
 end
