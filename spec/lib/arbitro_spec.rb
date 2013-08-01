@@ -48,24 +48,23 @@ describe Arbitro do
 
   context ' - error handling - ' do
     it 'should raise when a bad type is passed in' do
-      bad_scoring = lambda { Arbitro.score( 7 ) }
-      bad_scoring.should raise_exception( Arbitro::NotSupported ) do |e| 
-        e.message.should =~ /#{7.class.name}/ 
-      end
+      @param = 7
+      @message_match = /that listens to :each(.*)#{7.class.name}/
     end
 
     it 'should raise when a heat array lacks something answering to score' do
-      bad_scoring = lambda { Arbitro.score( [[7,1,2,3],[1,2,3,4]] ) }
-      bad_scoring.should raise_exception( Arbitro::NotSupported ) do |e| 
-        e.message.should =~ /#{7.class.name}/ 
-      end
+      @param = [[7,1,2,3],[1,2,3,4]]
+      @message_match = /something receiving :score or an array(.*)#{7.class.name}/
     end
 
     it 'should raise when a heat is not an array or a hash' do
-      bad_scoring = lambda { Arbitro.score( [7,1,2,3] ) }
-      bad_scoring.should raise_exception( Arbitro::NotSupported ) do |e| 
-        e.message.should =~ /#{7.class.name}/ 
-      end
+      @param = [7,1,2,3]
+      @message_match = /must be an Array or a Hash(.*)#{7.class.name}/
+    end
+
+    after :each do
+      bad_scoring = lambda { Arbitro.score( @param ) }
+      bad_scoring.should raise_exception( Arbitro::NotSupported ) { |e|  e.message.should =~ @message_match }
     end
   end
 
