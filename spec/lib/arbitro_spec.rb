@@ -4,27 +4,23 @@ describe Arbitro do
   Result = Struct.new :id, :score
   Heat = Struct.new :results
 
-  def get_me_an_array_of_results *scores
+  def get_me_an_array_of_results scores
     scores.size.times.map { |id| Result.new id, scores[id] }
   end
 
-  def get_me_an_array_of_arrays *scores
+  def get_me_an_array_of_arrays scores
     scores.size.times.map { |id| [id, scores[id]] }
   end
 
-  def get_me_a_hash *scores
-    h = {}
-    scores.each_with_index do |one_score, i|
-      h[i] = one_score
-    end
-    h
+  def get_me_a_hash scores
+    Hash[get_me_an_array_of_arrays scores]
   end
 
   [:get_me_an_array_of_results, :get_me_an_array_of_arrays, :get_me_a_hash].each do |heat_method|
     context ' - sum up some scores - ' do
-      let(:heat1) { self.send heat_method, 2, 4, 7 }
-      let(:heat2) { self.send heat_method, 3, 5, 6 }
-      let(:heat3) { self.send heat_method, 4, 9, 4 }
+      let(:heat1) { self.send heat_method, [2, 4, 7] }
+      let(:heat2) { self.send heat_method, [3, 5, 6] }
+      let(:heat3) { self.send heat_method, [4, 9, 4] }
       let(:heats) { [heat1, heat2, heat3] }
 
       context 'standard case - ' do
